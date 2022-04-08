@@ -1,58 +1,50 @@
-from collections import defaultdict
- 
-# This class represents a directed graph using
-# adjacency list representation
- 
- 
+# clase para definir el objeto grafo
 class Graph:
+
+    def __init__(self, edges, n):
+        # lista de adyacencia en base a lista de listas
+        self.adjList = [[] for _ in range(n)]
  
-    # Constructor
-    def __init__(self):
- 
-        # default dictionary to store graph
-        self.graph = defaultdict(list)
- 
-    # function to add an edge to graph
-    def addEdge(self, u, v):
-        self.graph[u].append(v)
- 
-    # A function used by DFS
-    def DFSUtil(self, v, visited):
- 
-        # Mark the current node as visited
-        # and print it
-        visited.add(v)
-        print(v, end=' ')
- 
-        # Recur for all the vertices
-        # adjacent to this vertex
-        for neighbour in self.graph[v]:
-            if neighbour not in visited:
-                self.DFSUtil(neighbour, visited)
- 
-    # The function to do DFS traversal. It uses
-    # recursive DFSUtil()
-    def DFS(self, v):
- 
-        # Create a set to store visited vertices
-        visited = set()
- 
-        # Call the recursive helper function
-        # to print DFS traversal
-        self.DFSUtil(v, visited)
- 
-# Driver code
+        # aumentan aristas al graph undireccionado
+        for (src, dest) in edges:
+            self.adjList[src].append(dest)
+            self.adjList[dest].append(src)
  
  
-# Create a graph given
-# in the above diagram
-g = Graph()
-g.addEdge(0, 1)
-g.addEdge(0, 2)
-g.addEdge(1, 2)
-g.addEdge(2, 0)
-g.addEdge(2, 3)
-g.addEdge(3, 3)
+# funcion recursiva para ejecutar el grafo de manera transversal
+def BFS(graph, v, checked):
  
-print("Following is DFS from (starting from vertex 2)")
-g.DFS(2)
+    checked[v] = True            # check el node 
+    print(v, end=' ')               # print el current node
+ 
+    # repite para cada arista (v, u)
+    for u in graph.adjList[v]:
+        if not checked[u]:       # si `u` no esta checked
+            BFS(graph, u, checked)
+ 
+ #ejemplo
+if __name__ == '__main__':
+ 
+    # Lista de aristas de un grafo
+    edges = [
+        # Notice that node 0 is unconnected
+        (1, 2), (1, 7), (1, 8), (2, 3), (2, 6), (3, 4),
+        (3, 5), (8, 9), (8, 12), (9, 10), (9, 11)
+    ]
+ 
+    # numero de nodes en el grafo
+    n = 13
+ 
+    # construir el grafo con las aristas
+    graph = Graph(edges, n)
+ 
+    # vistar cada vertice para comprobar si fue checked o no
+    checked = [False] * n
+ 
+    # dfs para todos los nodes que no estan checked y llamada recursiva para cubrir todas las aristas y vertices del grafo 
+    # cover all connected components of a graph
+    for i in range(n):
+        if not checked[i]:
+            BFS(graph, i, checked)
+
+#complejidad O(n)
