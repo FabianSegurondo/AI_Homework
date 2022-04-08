@@ -1,4 +1,5 @@
 import curses
+from webbrowser import get
 PLAYER = ('S', '$')
 BOX = ('=', '#')
 SPACE = (' ', '|')
